@@ -1,5 +1,11 @@
 # HIT137_24S2_Group162
 
+## Team members
+- Howard Mai S371832
+- Warna Vithanage S373831
+- S M Ashraful Mustofa Fardin S360794
+- Siddharth Biswa S377269
+
 ## Instructions
 1. pull main branch >>> git pull main
 2. create a branch >>> git checkout -b ${name}_${student_id}  // eg. git checkout -b James_S000001
