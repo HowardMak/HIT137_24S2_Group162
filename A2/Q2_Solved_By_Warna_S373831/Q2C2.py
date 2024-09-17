@@ -1,33 +1,33 @@
-def separate_string(sh):
+def separate_string(s):
   
     numbers = ""
     letters = ""
-    for char in sh:
+    for char in s:
         if char.isdigit():
-            numbers += char
+            numbers += char #seperate numbers
         else:
-            letters += char
+            letters += char #seperate letters
     return numbers, letters
 
 def convert_to_ascii(string, n_number):
 
     #Convert characters to ASCII code decimal values
-    ascii_value = []
+    ascii_value = [] #list for ascii values
     for char in string:
-        if n_number and int(char) % 2 == 0:
-            ascii_value.append(ord(char))
-        elif not n_number and char.isupper():
-            ascii_value.append(ord(char))
+        if n_number and int(char) % 2 == 0: #check if its number AND even
+            ascii_value.append(ord(char)) # convert number to ascii
+        elif not n_number and char.isupper(): #check whether if its uppercase
+            ascii_value.append(ord(char)) #convert letter to ascii
     return ascii_value
 
 def decrypt_cryptogram(cryptogram, shift_key):
     #Decrypt cryptogram with given shift key
     decrypted_out = ""
     for char in cryptogram:
-        if char.isalpha():
-            decrypted_out += chr((ord(char) - shift_key - 65) % 26 + 65)
+        if char.isalpha(): #check if a character is a letter
+            decrypted_out += chr((ord(char) - shift_key - 65) % 26 + 65) #shift character using modulo 26
         else:
-            decrypted_out += char
+            decrypted_out += char #leave out non-letter characters
     return decrypted_out
 
 # seperate strings and convert to ASCII
