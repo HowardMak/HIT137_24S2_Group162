@@ -1,7 +1,7 @@
-def separate_string(s):
+def separate_string(s): #function to seperate the number and letters in a string 
   
-    numbers = ""
-    letters = ""
+    numbers = "" # string to store the numbers
+    letters = "" # string to store the letters
     for char in s:
         if char.isdigit():
             numbers += char #seperate numbers
@@ -40,6 +40,9 @@ print("Upper-Case letters to ASCII Output:", convert_to_ascii(letter_string, Fal
 
 # Decrypt cryptogram
 cryptogram = "VZ FRYSVFU VZCNGVRAG NAQ N YVGGYR VAFRPHER V ZNXR ZVFGNXRF VNZ BHG BS PBAGEBYNAQNG GVZRF UNEQ GB UNAQYR OHG VS LBH PNAG UNAQYR ZR NG ZL JBEFG GURA LBH FHER NF URYYQBAG QRFREIR ZR NG ZL ORFG ZNEVYLA ZBAEBR"
-shift_key = 13  #shift key 13
-decrypted_sent = decrypt_cryptogram(cryptogram, shift_key)
-print("Decrypted Sentence:", decrypted_sent)
+for shift_key in range(26):
+    decrypted_text = decrypt_cryptogram(cryptogram, shift_key)
+    print(f"Example {shift_key}: If ciphered quote is {cryptogram}, and 's' is {shift_key}, the the original quote is {decrypted_text}")
+
+#Correct Shift Code is 13
+#The Original quote is "IM SELFISH IMPATIENT AND A LITTLE INSECURE I MAKE MISTAKES IAM OUT OF CONTROLANDAT TIMES HARD TO HANDLE BUT IF YOU CANT HANDLE ME AT MY WORST THEN YOU SURE AS HELLDONT DESERVE ME AT MY BEST MARILYN MONROE"
