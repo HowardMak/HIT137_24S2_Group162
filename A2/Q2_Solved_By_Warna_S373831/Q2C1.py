@@ -11,13 +11,14 @@ if generated_number % 2 == 0:
 img = Image.open("chapter1.jpg")
 pixels = img.load()
 width, height = img.size
-for x in range(width):
-    for y in range(height):
-        r, g, b = pixels[x, y]
-        new_red = min(255, r + generated_number)
-        new_green = min(255, g + generated_number)
-        new_blue = min(255, b + generated_number)
-        pixels[x, y] = (new_red, new_green, new_blue)
+#shift the pixels
+for m in range(width):
+    for n in range(height):
+        r, g, b = pixels[m, n]
+        new_red = min(255, r + generated_number) #red pixels
+        new_green = min(255, g + generated_number) #green pixels
+        new_blue = min(255, b + generated_number) # blue pixels
+        pixels[m, n] = (new_red, new_green, new_blue)
 
 # Save the new image
 img.save("chapter1out.jpg")
@@ -29,4 +30,4 @@ for x in range(width):
         r, _, _ = pixels[x, y]
         red_sum += r
 
-print("Red Pixel Value of the Image: ", red_sum)
+print("Red Pixel Value of the Image: ", red_sum) #print the red pixel value
