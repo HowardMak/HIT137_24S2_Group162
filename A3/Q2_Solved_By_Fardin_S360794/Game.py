@@ -1,9 +1,7 @@
-import pygame
+"""This is a game application."""
 import random
 import math
-
-# Initialize Pygame
-pygame.init()
+import pygame
 
 # Constants
 SCREEN_WIDTH = 800
@@ -30,43 +28,83 @@ BULLET_SPEED = 10
 # Enemy settings
 ENEMY_SPAWN_RATE = 60  # Frames between enemy spawns
 ENEMY_TYPES = [
-    {"color": RED, "size": 30, "bullet_color": RED, "bullet_radius": 5, "bullet_damage": 5, "speed": 1.5},
-    {"color": BLUE, "size": 40, "bullet_color": BLUE, "bullet_radius": 7, "bullet_damage": 10, "speed": 1.0},
-    {"color": YELLOW, "size": 50, "bullet_color": YELLOW, "bullet_radius": 10, "bullet_damage": 15, "speed": 0.8},
+    {
+        "color": RED,
+        "size": 30,
+        "bullet_color": RED,
+        "bullet_radius": 5,
+        "bullet_damage": 5,
+        "speed": 1.5
+    },
+    {
+        "color": BLUE,
+        "size": 40,
+        "bullet_color": BLUE,
+        "bullet_radius": 7,
+        "bullet_damage": 10,
+        "speed": 1.0
+    },
+    {
+        "color": YELLOW,
+        "size": 50,
+        "bullet_color": YELLOW,
+        "bullet_radius": 10,
+        "bullet_damage": 15,
+        "speed": 0.8
+    },
 ]
 
-# Set up the display
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Space Shooter with Power-Ups")
 
 class Player:
+    """Player Class"""
     def __init__(self):
-        self.x = SCREEN_WIDTH // 2
-        self.y = SCREEN_HEIGHT - 50
+        self.width = SCREEN_WIDTH // 2
+        self.height = SCREEN_HEIGHT - 50
         self.speed = PLAYER_SPEED
         self.health = 100
         self.lives = PLAYER_LIVES  # New: Player lives
         self.bullets = []
 
     def move(self, dx, dy):
-        self.x = max(0, min(SCREEN_WIDTH, self.x + dx * self.speed))
-        self.y = max(0, min(SCREEN_HEIGHT, self.y + dy * self.speed))
+        self.width = max(0, min(SCREEN_WIDTH, self.width + dx * self.speed))
+        self.height = max(0, min(SCREEN_HEIGHT, self.height + dy * self.speed))
 
     def shoot(self):
-        self.bullets.append(Bullet(self.x, self.y - PLAYER_SIZE // 2, GREEN, 5, 10, -1))
+        self.bullets.append(
+            Bullet(self.width, self.height - PLAYER_SIZE // 2, GREEN, 5, 10, -1)
+        )
 
     def draw(self, screen):
         pygame.draw.polygon(screen, GREEN, [
-            (self.x, self.y - PLAYER_SIZE // 2),
-            (self.x - PLAYER_SIZE // 2, self.y + PLAYER_SIZE // 2),
-            (self.x + PLAYER_SIZE // 2, self.y + PLAYER_SIZE // 2)
+            (self.width, self.height - PLAYER_SIZE // 2),
+            (self.width - PLAYER_SIZE // 2, self.height + PLAYER_SIZE // 2),
+            (self.width + PLAYER_SIZE // 2, self.height + PLAYER_SIZE // 2)
         ])
         # Draw health bar
-        pygame.draw.rect(screen, RED, (self.x - PLAYER_SIZE // 2, self.y + PLAYER_SIZE // 2 + 5, PLAYER_SIZE, 5))
-        pygame.draw.rect(screen, GREEN, (self.x - PLAYER_SIZE // 2, self.y + PLAYER_SIZE // 2 + 5, PLAYER_SIZE * self.health // 100, 5))
+        pygame.draw.rect(
+            screen,
+            RED,
+            (
+                self.width - PLAYER_SIZE // 2,
+                self.height + PLAYER_SIZE // 2 + 5,
+                PLAYER_SIZE,
+                5
+            )
+        )
+        pygame.draw.rect(
+            screen,
+            GREEN,
+            (
+                self.width - PLAYER_SIZE // 2,
+                self.height + PLAYER_SIZE // 2 + 5,
+                PLAYER_SIZE * self.health // 100,
+                5
+            )
+        )
 
     def reset_health(self):
         self.health = 100
+
 
 class Bullet:
     def __init__(self, x, y, color, radius, damage, direction):
@@ -82,7 +120,13 @@ class Bullet:
         self.y += self.speed * self.direction
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
+        pygame.draw.circle(
+            screen,
+            self.color,
+            (int(self.x), int(self.y)),
+            self.radius
+        )
+
 
 class Enemy:
     def __init__(self, enemy_type, speed_multiplier=1.0):
@@ -94,7 +138,8 @@ class Enemy:
         self.bullet_color = enemy_type["bullet_color"]
         self.bullet_radius = enemy_type["bullet_radius"]
         self.bullet_damage = enemy_type["bullet_damage"]
-        self.speed = enemy_type["speed"] * speed_multiplier  # Adjusted for enemy speed increase
+        # Adjusted for enemy speed increase
+        self.speed = enemy_type["speed"] * speed_multiplier
         self.shoot_timer = 0
         self.shoot_delay = random.randint(60, 120)
 
@@ -104,12 +149,25 @@ class Enemy:
     def shoot(self):
         if self.shoot_timer >= self.shoot_delay:
             self.shoot_timer = 0
-            return Bullet(self.x, self.y + self.size // 2, self.bullet_color, self.bullet_radius, self.bullet_damage, 1)
+            return Bullet(
+                self.x,
+                self.y + self.size // 2,
+                self.bullet_color,
+                self.bullet_radius,
+                self.bullet_damage,
+                1
+            )
         self.shoot_timer += 1
         return None
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.size // 2)
+        pygame.draw.circle(
+            screen,
+            self.color,
+            (int(self.x), int(self.y)),
+            self.size // 2
+        )
+
 
 class PowerUp:
     def __init__(self, x, y, kind):
@@ -124,7 +182,13 @@ class PowerUp:
         self.y += self.speed
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.size)
+        pygame.draw.circle(
+            screen,
+            self.color,
+            (int(self.x), int(self.y)),
+            self.size
+        )
+
 
 class Game:
     def __init__(self):
@@ -199,7 +263,11 @@ class Game:
         # Player bullets hitting enemies
         for bullet in self.player.bullets[:]:
             for enemy in self.enemies[:]:
-                if math.hypot(bullet.x - enemy.x, bullet.y - enemy.y) < enemy.size // 2 + bullet.radius:
+                if (
+                    math.hypot(bullet.x - enemy.x, bullet.y - enemy.y)
+                ) < (
+                    enemy.size // 2 + bullet.radius
+                ):
                     self.player.bullets.remove(bullet)
                     self.enemies.remove(enemy)
                     self.score += 10
@@ -217,21 +285,36 @@ class Game:
 
         # Enemy bullets hitting player
         for bullet in self.enemy_bullets[:]:
-            if math.hypot(bullet.x - self.player.x, bullet.y - self.player.y) < PLAYER_SIZE // 2 + bullet.radius:
+            if (
+                    math.hypot(
+                        bullet.x - self.player.width,
+                        bullet.y - self.player.height
+                    )
+                ) < (
+                    PLAYER_SIZE // 2 + bullet.radius
+                    ):
                 self.player.health = max(0, self.player.health - bullet.damage)
                 self.enemy_bullets.remove(bullet)
                 if self.player.health <= 0:
                     self.player.lives -= 1  # New: Lose a life
                     if self.player.lives > 0:
-                        self.player.reset_health()  # Reset health if lives remain
+                        # Reset health if lives remain
+                        self.player.reset_health()
                     else:
-                        self.game_over = True  # Game over if no lives left
+                        # Game over if no lives left
+                        self.game_over = True
 
         # Player collecting power-ups
         for power_up in self.power_ups[:]:
-            if math.hypot(power_up.x - self.player.x, power_up.y - self.player.y) < PLAYER_SIZE:
+            if (
+                math.hypot(
+                    power_up.x - self.player.width,
+                    power_up.y - self.player.height
+                )
+            ) < PLAYER_SIZE:
                 if power_up.kind == 'health':
-                    self.player.health = min(100, self.player.health + 50)  # Restore 50% health
+                    # Restore 50% health
+                    self.player.health = min(100, self.player.health + 50)
                 elif power_up.kind == 'life':
                     self.player.lives += 1  # Gain 1 extra life
                 self.power_ups.remove(power_up)
@@ -253,21 +336,29 @@ class Game:
         score_text = font.render(f"Score: {self.score}", True, WHITE)
         level_text = font.render(f"Level: {self.level}", True, WHITE)
         time_text = font.render(f"Time: {self.level_time // FPS}", True, WHITE)
-        lives_text = font.render(f"Lives: {self.player.lives}", True, WHITE)  # New: Display lives
+        # New: Display lives
+        lives_text = font.render(f"Lives: {self.player.lives}", True, WHITE)
         screen.blit(score_text, (10, 10))
         screen.blit(level_text, (10, 50))
         screen.blit(time_text, (10, 90))
         screen.blit(lives_text, (10, 130))  # New: Draw lives
 
         if self.game_over:
-            game_over_text = font.render("Game Over! Press R to Restart", True, WHITE)
-            screen.blit(game_over_text, (SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2))
+            game_over_text = font.render(
+                "Game Over! Press R to Restart",
+                True, WHITE
+            )
+            screen.blit(
+                game_over_text,
+                (SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2)
+            )
 
     def draw_start_screen(self, screen):
         font = pygame.font.Font(None, 74)
         start_text = font.render("Press Enter to Start", True, WHITE)
         screen.fill(BLACK)
         screen.blit(start_text, (SCREEN_WIDTH // 2 - 250, SCREEN_HEIGHT // 2))
+
 
 def main():
     clock = pygame.time.Clock()
@@ -305,5 +396,12 @@ def main():
 
     pygame.quit()
 
+
 if __name__ == "__main__":
+    # Initialize Pygame
+    pygame.init()
+    # Set up the display
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Space Shooter with Power-Ups")
+    
     main()
