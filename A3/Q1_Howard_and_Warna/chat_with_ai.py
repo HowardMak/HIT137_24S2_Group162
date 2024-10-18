@@ -1,15 +1,23 @@
+"""This is an AI chat bot."""
+
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
 import webbrowser
-import google.generativeai as genai
 import os
+import google.generativeai as genai
 
 # locate current directory
 CURRENT_DIR = os.path.dirname(__file__)
 # define a file to store and get the api key
 API_KEY_FILE = os.path.join(CURRENT_DIR, 'AI_api_key.txt')
 
+
 class Application(tk.Frame):
+    """
+    This is the application class that handle the interaction functions with AI
+    """
+    # pylint: disable=too-many-instance-attributes
+    # Four is reasonable in this case.
     def __init__(self, master):
         """
         App initialisation
@@ -34,11 +42,13 @@ class Application(tk.Frame):
         window_height = 500
         screen_width = self.master.winfo_screenwidth()
         screen_height = self.master.winfo_screenheight()
-        
+
         position_x = (screen_width // 2) - (window_width // 2)
         position_y = (screen_height // 2) - (window_height // 2)
-        
-        self.master.geometry(f'{window_width}x{window_height}+{position_x}+{position_y}')
+
+        self.master.geometry(
+            f'{window_width}x{window_height}+{position_x}+{position_y}'
+        )
 
     def create_widgets(self):
         """
@@ -48,7 +58,14 @@ class Application(tk.Frame):
         self.sidebar_label = tk.Label(root, text="Chat History:")
         self.sidebar_label.grid(row=0, column=3, padx=10, pady=5, sticky='w')
         self.sidebar = tk.Listbox(root, height=20, width=20)
-        self.sidebar.grid(row=1, column=3, rowspan=4, padx=10, pady=5, sticky='n')
+        self.sidebar.grid(
+            row=1,
+            column=3,
+            rowspan=4,
+            padx=10,
+            pady=5,
+            sticky='n'
+        )
         self.sidebar.bind('<<ListboxSelect>>', self.load_selected_conversation)
 
         # API key
@@ -58,38 +75,122 @@ class Application(tk.Frame):
         self.api_key.grid(row=0, column=1, padx=10, pady=5, sticky='w')
 
         # connect button
-        self.connect_to_api_button = tk.Button(root, text="Connect", command=self.connect_to_api)
-        self.connect_to_api_button.grid(row=0, column=2, padx=10, pady=5, sticky='w')
+        self.connect_to_api_button = tk.Button(
+            root,
+            text="Connect",
+            command=self.connect_to_api
+        )
+        self.connect_to_api_button.grid(
+            row=0,
+            column=2,
+            padx=10,
+            pady=5,
+            sticky='w'
+        )
 
         # get an API key if the user des not have one
-        self.get_api_label = tk.Label(root, text="Haven't got a Gemini API Key?")
-        self.get_api_label.grid(row=1, column=0, padx=10, pady=5, sticky='w')
-        self.get_api_button = tk.Button(root, text="Get my Gemini API Key", command=self.open_api_website)
-        self.get_api_button.grid(row=1, column=1, padx=10, pady=5, sticky='w')
+        self.get_api_label = tk.Label(
+            root,
+            text="Haven't got a Gemini API Key?"
+        )
+        self.get_api_label.grid(
+            row=1,
+            column=0,
+            padx=10,
+            pady=5,
+            sticky='w'
+        )
+        self.get_api_button = tk.Button(
+            root,
+            text="Get my Gemini API Key",
+            command=self.open_api_website
+        )
+        self.get_api_button.grid(
+            row=1,
+            column=1,
+            padx=10,
+            pady=5,
+            sticky='w'
+        )
 
         # chat area
         self.chat_area_label = tk.Label(root, text="Chat Area:")
         self.chat_area_label.grid(row=2, column=0, padx=10, pady=5, sticky='w')
-        self.chat_area = scrolledtext.ScrolledText(root, wrap=tk.WORD, state=tk.DISABLED, width=60, height=15)
-        self.chat_area.grid(row=3, column=0, columnspan=3, padx=10, pady=5)
+        self.chat_area = scrolledtext.ScrolledText(
+            root,
+            wrap=tk.WORD,
+            state=tk.DISABLED,
+            width=60,
+            height=15
+        )
+        self.chat_area.grid(
+            row=3,
+            column=0,
+            columnspan=3,
+            padx=10,
+            pady=5
+        )
 
         # a textfiled where the user can input a mesage to caht with the API
         self.user_input_label = tk.Label(root, text="Your Message:")
-        self.user_input_label.grid(row=4, column=0, padx=10, pady=5, sticky='w')
+        self.user_input_label.grid(
+            row=4,
+            column=0,
+            padx=10,
+            pady=5,
+            sticky='w'
+        )
         self.user_input = tk.Text(root, height=2, width=40)
-        self.user_input.grid(row=4, column=1, columnspan=2, padx=10, pady=5, sticky='w')
+        self.user_input.grid(
+            row=4,
+            column=1,
+            columnspan=2,
+            padx=10,
+            pady=5,
+            sticky='w'
+        )
 
         # change to a get a new chat
-        self.new_chat_button = tk.Button(root, text="New Chat", command=self.new_chat)
-        self.new_chat_button.grid(row=5, column=1, padx=10, pady=10, sticky='w')
+        self.new_chat_button = tk.Button(
+            root,
+            text="New Chat",
+            command=self.new_chat
+        )
+        self.new_chat_button.grid(
+            row=5,
+            column=1,
+            padx=10,
+            pady=10,
+            sticky='w'
+        )
 
         # send message to the API
-        self.send_button = tk.Button(root, text="Send", command=self.send_message)
-        self.send_button.grid(row=5, column=2, padx=10, pady=10, sticky='w')
+        self.send_button = tk.Button(
+            root,
+            text="Send",
+            command=self.send_message
+        )
+        self.send_button.grid(
+            row=5,
+            column=2,
+            padx=10,
+            pady=10,
+            sticky='w'
+        )
 
         # delete a selected chat history
-        self.delete_button = tk.Button(root, text="Delete Selected Chat", command=self.delete_selected_chat)
-        self.delete_button.grid(row=6, column=3, padx=10, pady=10, sticky='n')
+        self.delete_button = tk.Button(
+            root,
+            text="Delete Selected Chat",
+            command=self.delete_selected_chat
+        )
+        self.delete_button.grid(
+            row=6,
+            column=3,
+            padx=10,
+            pady=10,
+            sticky='n'
+        )
 
     def load_api_key(self):
         """
@@ -97,11 +198,14 @@ class Application(tk.Frame):
         """
         # Load the API key from a file if it exists
         if os.path.exists(API_KEY_FILE):
-            with open(API_KEY_FILE, 'r') as file:
+            with open(API_KEY_FILE, mode='r', encoding='utf-8') as file:
                 api_key = file.read().strip()
                 self.api_key.delete("1.0", tk.END)
                 self.api_key.insert(tk.END, api_key)
-                messagebox.showinfo("API Key Loaded", "API key loaded from file.")
+                messagebox.showinfo(
+                    "API Key Loaded",
+                    "API key loaded from file."
+                )
 
     def connect_to_api(self):
         """
@@ -114,12 +218,23 @@ class Application(tk.Frame):
             genai.configure(api_key=api_key_value)
             self.model = genai.GenerativeModel("gemini-1.5-flash")
 
-            with open(API_KEY_FILE, 'w') as file:
+            with open(API_KEY_FILE, mode='w', encoding='utf-8') as file:
                 file.write(api_key_value)
 
-            messagebox.showinfo("Success", "Successfully connected to the API!")
-        except Exception as e:
-            messagebox.showerror("Connection Error", f"Failed to connect to the API: {str(e)}")
+            messagebox.showinfo(
+                "Success",
+                "Successfully connected to the API!"
+            )
+        except ValueError:
+            messagebox.showerror(
+                "Value Error",
+                f"Failed to connect to the API: {str(ValueError)}"
+            )
+        except OSError:
+            messagebox.showerror(
+                "File Error",
+                f"Failed to write API key to file: {str(OSError)}"
+            )
 
     def open_api_website(self):
         """
@@ -133,24 +248,43 @@ class Application(tk.Frame):
         """
         # if the model is not initialised, throw an error
         if not self.model:
-            messagebox.showerror("API Error", "You need to connect to the API first")
+            messagebox.showerror(
+                "API Error",
+                "You need to connect to the API first"
+            )
             return
-        
+
         user_message = self.user_input.get("1.0", "end-1c").strip()
         # if the message is empty, it cannot be sent
         if not user_message:
-            messagebox.showwarning("Input Error", "Please enter a message before sending.")
+            messagebox.showwarning(
+                "Input Error",
+                "Please enter a message before sending."
+            )
             return
         # update the chat area
         self.chat_area.config(state=tk.NORMAL)
         self.chat_area.insert(tk.END, "You: " + user_message + "\n")
-        
+
         # use try-catch in case of the network error
         try:
             response = self.respond_to_user(user_message)
             self.chat_area.insert(tk.END, "Bot: " + response + "\n\n")
-        except Exception as e:
-            messagebox.showerror("Response Error", f"Error generating response: {str(e)}")
+        except ValueError:
+            messagebox.showerror(
+                "Input Error",
+                f"Invalid input: {str(ValueError)}"
+            )
+        except ConnectionError:
+            messagebox.showerror(
+                "Connection Error",
+                f"Network issue: {str(ConnectionError)}"
+            )
+        except RuntimeError:
+            messagebox.showerror(
+                "Runtime Error",
+                f"Runtime issue: {str(RuntimeError)}"
+            )
         # make the chat area disabled once it's been updated
         self.chat_area.config(state=tk.DISABLED)
         self.user_input.delete("1.0", tk.END)
@@ -158,11 +292,15 @@ class Application(tk.Frame):
         # save message to current conversation
         if self.current_chat_key is None:
             self.current_chat_key = user_message
-            self.chat_history[self.current_chat_key] = [f"You: {user_message}\nBot: {response}\n"]
+            self.chat_history[
+                self.current_chat_key
+            ] = [f"You: {user_message}\nBot: {response}\n"]
             self.sidebar.insert(tk.END, self.current_chat_key)
         else:
             # append to the current conversation
-            self.chat_history[self.current_chat_key].append(f"You: {user_message}\nBot: {response}\n")
+            self.chat_history[self.current_chat_key].append(
+                f"You: {user_message}\nBot: {response}\n"
+            )
 
     def respond_to_user(self, message: str) -> str:
         """
@@ -180,7 +318,7 @@ class Application(tk.Frame):
         self.chat_area.delete(1.0, tk.END)
         self.chat_area.config(state=tk.DISABLED)
 
-    def load_selected_conversation(self, event):
+    def load_selected_conversation(self):
         """
         load the selected conversation from the sidebar
         """
@@ -188,7 +326,7 @@ class Application(tk.Frame):
         if selection:
             selected_message = self.sidebar.get(selection[0])
             conversation = self.chat_history.get(selected_message, [])
-            
+
             # show the conversation in the chat area
             self.chat_area.config(state=tk.NORMAL)
             self.chat_area.delete(1.0, tk.END)
@@ -202,17 +340,27 @@ class Application(tk.Frame):
         """
         selection = self.sidebar.curselection()
         if not selection:
-            messagebox.showwarning("Selection Error", "Please select a chat to delete.")
+            messagebox.showwarning(
+                "Selection Error",
+                "Please select a chat to delete."
+            )
             return
-        
+
         selected_message = self.sidebar.get(selection[0])
-        confirm = messagebox.askyesno("Confirm Deletion", f"Are you sure you want to delete the chat '{selected_message}'?")
+        confirm = messagebox.askyesno(
+            "Confirm Deletion",
+            f"Are you sure you want to delete the chat '{selected_message}'?"
+        )
         if confirm:
             del self.chat_history[selected_message]
             self.sidebar.delete(selection[0])
             if self.current_chat_key == selected_message:
                 self.new_chat()
-            messagebox.showinfo("Deletion Successful", "Selected chat has been deleted.")
+            messagebox.showinfo(
+                "Deletion Successful",
+                "Selected chat has been deleted."
+            )
+
 
 if __name__ == "__main__":
     root = tk.Tk()
